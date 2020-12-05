@@ -12,6 +12,12 @@ public:
 		y(y_in)
 	{
 	}
+	Vec2_(const Vec2_& other)
+		:
+		x(other.x),
+		y(other.y)
+	{
+	}
 	Vec2_& operator=(const Vec2_& rhs)
 	{
 		x = rhs.x;

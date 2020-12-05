@@ -147,6 +147,7 @@
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Tentacle.h" />
     <ClInclude Include="Vec2.h" />
   </ItemGroup>
   <ItemGroup>
