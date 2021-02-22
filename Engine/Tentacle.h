@@ -4,44 +4,44 @@
 #include <cmath>
 #include <cassert>
 
-struct Segment
-{
-	//Variables
-	Vec2 pos = Vec2(0.0f, 0.0f);
-	float len = 0.0f;
-	float theta = 0.0f;
-	Color color = Colors::White;
-	//Variables
-
-	//Functions
-	Segment() = default;
-	Segment(Vec2 p, float l, float a, Color c)
-		:
-		pos(p),
-		len(l),
-		theta(a),
-		color(c)
-	{
-	}
-	Vec2 calculateEnd() const
-	{
-		return pos + Vec2(cos(theta), sin(theta)) * len;
-	}
-	void Follow(Vec2 target)
-	{
-		//Update the head
-		const Vec2 dir = target - calculateEnd();
-		if (dir.x != 0.0f && dir.y != 0.0f)
-		{
-			pos = target;
-			theta = dir.GetAngle() - 3.1415926f;
-		}
-	}
-	//Functions
-};
-
 struct Tentacle
 {
+	struct Segment
+	{
+		//Variables
+		Vec2 pos = Vec2(0.0f, 0.0f);
+		float len = 0.0f;
+		float theta = 0.0f;
+		Color color = Colors::White;
+		//Variables
+
+		//Functions
+		Segment() = default;
+		Segment(Vec2 p, float l, float a, Color c)
+			:
+			pos(p),
+			len(l),
+			theta(a),
+			color(c)
+		{
+		}
+		Vec2 calculateEnd() const
+		{
+			return pos + Vec2(cos(theta), sin(theta)) * len;
+		}
+		void Follow(Vec2 target)
+		{
+			//Update the head
+			const Vec2 dir = target - calculateEnd();
+			if (dir.x != 0.0f && dir.y != 0.0f)
+			{
+				pos = target;
+				theta = dir.GetAngle() - 3.1415926f;
+			}
+		}
+		//Functions
+	};
+
 	//Variables
 	int nSegments = 0;
 	Segment* segments = nullptr;
