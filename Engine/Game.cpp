@@ -25,8 +25,7 @@ Game::Game(MainWindow& wnd)
 	:
 	wnd(wnd),
 	gfx(wnd),
-	tentacle(nSegments, Vec2(float(Graphics::ScreenWidth / 2), float(Graphics::ScreenHeight / 2)),
-		segmentLength, 0.0f, Colors::White)
+	tentacle(nSegments, Vec2(float(Graphics::ScreenWidth / 2), float(Graphics::ScreenHeight / 2)), tentacleLenght, 0.0f, Colors::White)
 {
 }
 
@@ -40,10 +39,10 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	tentacle.Follow(Vec2(float(wnd.mouse.GetPosX()), float(wnd.mouse.GetPosY())));
+	tentacle.FollowFromHead(Vec2(float(wnd.mouse.GetPosX()), float(wnd.mouse.GetPosY())));
 }
 
 void Game::ComposeFrame()
 {
-	tentacle.Draw(gfx);
+	tentacle.Draw(gfx, false);
 }

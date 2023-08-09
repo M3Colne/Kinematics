@@ -23,7 +23,7 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
-#include "Tentacle.h"
+#include "LineSeg.h"
 
 class Game
 {
@@ -44,7 +44,7 @@ private:
 	/********************************/
 	/*  User Variables              */
 	static constexpr int nSegments = 100;
-	static constexpr float segmentLength = 400/nSegments;
-	Tentacle tentacle;
+	static constexpr float tentacleLenght = 400.0f;
+	LineSeg tentacle;
 	/********************************/
 };
