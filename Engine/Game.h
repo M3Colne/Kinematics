@@ -43,8 +43,8 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
-	static constexpr int nSegments = 100;
+	static constexpr int nSegments = 20;
 	static constexpr float tentacleLenght = 200.0f;
-	LineSeg tentacle;
+	LineSeg tentacle[7];
 	/********************************/
 };

@@ -39,7 +39,7 @@ private:
     std::vector<Segment> sex;
     Color color;
     static constexpr float isConnectedRadius = 5.0f;
-    static constexpr unsigned char fabrikMaxIterations = 5;
+    char fabrikMaxIterations = 5;
 private:
     //Functions
     bool isConnected(const Vec2& base, const Vec2& target) const;
@@ -48,7 +48,7 @@ public:
 public:
     //Functions
     LineSeg() = default;
-    LineSeg(int n, Vec2 s, float l, float a, Color c);
+    LineSeg(int n, Vec2 s, float l, float a, Color c, char iter);
 
     void Draw(Graphics& gfx, bool drawJoints) const;
 

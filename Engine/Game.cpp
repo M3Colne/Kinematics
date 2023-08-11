@@ -24,9 +24,14 @@
 Game::Game(MainWindow& wnd)
 	:
 	wnd(wnd),
-	gfx(wnd),
-	tentacle(nSegments, Vec2(float(Graphics::ScreenWidth / 2), float(Graphics::ScreenHeight / 2)), tentacleLenght, 0.0f, Colors::White)
+	gfx(wnd)
 {
+	for (int i = 0; i < 7; i++)
+	{
+		const Color col(rand() % 255, rand() % 255, rand() % 255);
+		tentacle[i] =
+			LineSeg(nSegments, Vec2(float(Graphics::ScreenWidth / 2), float(Graphics::ScreenHeight / 2)), tentacleLenght, 0.0f, col, i+1);
+	}
 }
 
 void Game::Go()
@@ -39,10 +44,16 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	tentacle.AnchoredFollowFromTail(Vec2(float(wnd.mouse.GetPosX()), float(wnd.mouse.GetPosY())));
+	for (auto& ten : tentacle)
+	{
+		ten.AnchoredFollowFromTail(Vec2(float(wnd.mouse.GetPosX()), float(wnd.mouse.GetPosY())));
+	}
 }
 
 void Game::ComposeFrame()
 {
-	tentacle.Draw(gfx, false);
+	for (auto& ten : tentacle)
+	{
+		ten.Draw(gfx, false);
+	}
 }
