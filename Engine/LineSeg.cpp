@@ -252,7 +252,10 @@ void LineSeg::RotateSegment(unsigned int id, float dT)
 	const Vec2 delta = sex[id].GetB() - oldB;
 
 	//Fast fix
-	MoveBy(delta);
+	for (int i = id + 1; i < nSegments(); i++)
+	{
+		sex[i].MoveBy(delta);
+	}
 }
 
 void LineSeg::RotateThroughSegment(unsigned int id, float dT)
