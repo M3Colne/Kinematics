@@ -40,7 +40,7 @@ private:
 
     std::vector<Segment> sex;
     Color color;
-    static constexpr char fabrikMaxIterations = 5;
+    static constexpr char fabrikMaxIterations = 6;
 private:
     //Functions
 public:
