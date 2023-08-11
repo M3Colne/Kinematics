@@ -39,7 +39,7 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	tentacle.FollowFromHead(Vec2(float(wnd.mouse.GetPosX()), float(wnd.mouse.GetPosY())));
+	tentacle.AnchoredFollowFromTail(Vec2(float(wnd.mouse.GetPosX()), float(wnd.mouse.GetPosY())));
 }
 
 void Game::ComposeFrame()

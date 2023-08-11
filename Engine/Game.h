@@ -44,7 +44,7 @@ private:
 	/********************************/
 	/*  User Variables              */
 	static constexpr int nSegments = 100;
-	static constexpr float tentacleLenght = 400.0f;
+	static constexpr float tentacleLenght = 200.0f;
 	LineSeg tentacle;
 	/********************************/
 };
