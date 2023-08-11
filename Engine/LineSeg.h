@@ -23,6 +23,8 @@ private:
         Segment(Vec2 posA, Vec2 posB);
         Segment(Vec2 pos, float lenght, float angle);
 
+        void FollowFromHead(const Vec2& target);
+        void FollowFromTail(const Vec2& target);
         Vec2 GetB() const;
         Vec2 GetA() const;
         float GetAngle() const;
@@ -38,17 +40,15 @@ private:
 
     std::vector<Segment> sex;
     Color color;
-    static constexpr float isConnectedRadius = 5.0f;
-    char fabrikMaxIterations = 5;
+    static constexpr char fabrikMaxIterations = 5;
 private:
     //Functions
-    bool isConnected(const Vec2& base, const Vec2& target) const;
 public:
     //Variables
 public:
     //Functions
     LineSeg() = default;
-    LineSeg(int n, Vec2 s, float l, float a, Color c, char iter);
+    LineSeg(int n, Vec2 s, float l, float a, Color c);
 
     void Draw(Graphics& gfx, bool drawJoints) const;
 

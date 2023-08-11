@@ -29,6 +29,24 @@ LineSeg::Segment::Segment(Vec2 pos, float lenght, float angle)
 	angle(angle)
 {}
 
+void LineSeg::Segment::FollowFromHead(const Vec2 & target)
+{
+	if ((target - GetA()).GetLengthSq() != 0.0f) //this if statement is to avoid a bug that glitches a segment if it's not moving
+	{
+		ChangeAngleAtA((GetB() - target).GetAngle());
+	}
+	MoveA_At(target);
+}
+
+void LineSeg::Segment::FollowFromTail(const Vec2& target)
+{
+	if ((GetB() - target).GetLengthSq() != 0.0f) //this if statement is to avoid a bug that glitches a segment if it's not moving
+	{
+		ChangeAngleAtB((GetA() - target).GetAngle());
+	}
+	MoveB_At(target);
+}
+
 Vec2 LineSeg::Segment::GetB() const
 {
 	return A + Vec2(cos(angle), sin(angle)) * lenght;
@@ -138,22 +156,19 @@ void LineSeg::Draw(Graphics& gfx, bool drawJoints) const
 void LineSeg::FollowFromHead(const Vec2& target) //Follow just means to translate directly to the target, nothing physically complex
 {
 	assert(!sex.empty());
-	//Let the first head follow the target
-	if ((target - sex[0].GetA()).GetLengthSq() != 0.0f) //this if statement is to avoid a bug that glitches a segment if it's not moving
-	{
-		sex[0].ChangeAngleAtA((sex[0].GetB() - target).GetAngle());
-	}
-	sex[0].MoveA_At(target);
 
-	//And the rest follow the previous one's tail
-	for (auto& i = sex.begin() + 1; i != sex.end(); ++i)
+	//Check if we are already here
+	if ((target - GetHead().GetA()).GetLengthSq() > 0.0f)
 	{
-		const Vec2 prevTarg = (i - 1)->GetB();
-		if ((prevTarg - i->GetA()).GetLengthSq() != 0.0f) //this if statement is to avoid a bug that glitches a segment if it's not moving
+		//Let the first head follow the target
+		auto& seg = sex.begin();
+		seg->FollowFromHead(target);
+
+		//And the rest follow the previous one's tail
+		for (seg += 1; seg != sex.end(); ++seg)
 		{
-			i->ChangeAngleAtA((i->GetB() - prevTarg).GetAngle());
+			seg->FollowFromHead((seg - 1)->GetB());
 		}
-		i->MoveA_At(prevTarg);
 	}
 }
 
@@ -162,7 +177,7 @@ void LineSeg::AnchoredFollowFromHead(const Vec2& target)
 	//FABRIK algorithm
 	const Vec2 base(GetTail().GetB());
 
-	for (unsigned int iter = 0; iter < fabrikMaxIterations && !isConnected(base, target); iter++)
+	for (unsigned char iter = 0; iter < fabrikMaxIterations; iter++)
 	{
 		if (iter % 2 == 0)
 		{
@@ -184,25 +199,19 @@ void LineSeg::AnchoredFollowFromHead(const Vec2& target)
 void LineSeg::FollowFromTail(const Vec2& target) //Follow just means to translate directly to the target, nothing physically complex
 {
 	assert(!sex.empty());
-	//Let the last tail follow the target
-	auto& last = *sex.rbegin();
-	const Vec2 lastDir(last.GetA() - target);
-	if (lastDir.GetLengthSq() != 0.0f) //this if statement is to avoid a bug that glitches a segment if it's not moving
-	{
-		last.ChangeAngleAtB(lastDir.GetAngle());
-	}
-	last.MoveB_At(target);
 
-	//And the rest follow the previous one's head
-	for (auto& i = sex.rbegin() + 1; i != sex.rend(); ++i)
+	//Check if we are already there
+	if ((target - GetTail().GetB()).GetLengthSq() > 0.0f)
 	{
-		const Vec2 prevTarg = (i - 1)->GetA();
-		const Vec2 prevDir(i->GetA() - prevTarg);
-		if (lastDir.GetLengthSq() != 0.0f) //this if statement is to avoid a bug that glitches a segment if it's not moving
+		//Let the last tail follow the target
+		auto& seg = sex.rbegin();
+		seg->FollowFromTail(target);
+
+		//And the rest follow the previous one's head
+		for (seg += 1; seg != sex.rend(); ++seg)
 		{
-			i->ChangeAngleAtB(prevDir.GetAngle());
+			seg->FollowFromTail((seg - 1)->GetA());
 		}
-		i->MoveB_At(prevTarg);
 	}
 }
 
@@ -210,7 +219,7 @@ void LineSeg::AnchoredFollowFromTail(const Vec2& target)
 {
 	//FABRIK algorithm
 	const Vec2 base(GetHead().GetA());
-	for (unsigned int iter = 0; iter < fabrikMaxIterations && !isConnected(base, target); iter++)
+	for (unsigned char iter = 0; iter < fabrikMaxIterations; iter++)
 	{
 		if (iter % 2 == 0)
 		{
@@ -252,7 +261,7 @@ void LineSeg::RotateSegment(unsigned int id, float dT)
 	const Vec2 delta = sex[id].GetB() - oldB;
 
 	//Fast fix
-	for (int i = id + 1; i < nSegments(); i++)
+	for (unsigned int i = id + 1; i < nSegments(); i++)
 	{
 		sex[i].MoveBy(delta);
 	}
@@ -321,12 +330,4 @@ void LineSeg::RemoveSegment()
 	{
 		sex.pop_back();
 	}
-}
-
-bool LineSeg::isConnected(const Vec2& base, const Vec2& target) const
-{
-	return ((GetHead().GetA() - base).GetLengthSq() < isConnectedRadius * isConnectedRadius &&
-		(GetTail().GetB() - target).GetLengthSq() < isConnectedRadius * isConnectedRadius) ||
-		((GetHead().GetA() - target).GetLengthSq() < isConnectedRadius * isConnectedRadius &&
-			(GetTail().GetB() - base).GetLengthSq() < isConnectedRadius * isConnectedRadius);
 }
